@@ -36,7 +36,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define setTimer 50
+#define setLed 50
+#define setDot 100
+#define setSegment 50
+int status =1;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -56,8 +59,6 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int time_counter=50;
-int status=1;
 void display7SEG (int counter){
 	if(counter==0){
 		HAL_GPIO_WritePin(SEG0_GPIO_Port, SEG0_Pin, RESET);
@@ -150,6 +151,7 @@ void display7SEG (int counter){
 		HAL_GPIO_WritePin(SEG6_GPIO_Port, SEG6_Pin, RESET);
 	}
 }
+
 
 /* USER CODE END 0 */
 
@@ -321,27 +323,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ){
-	time_counter--;
-	if(time_counter<=0){
-		time_counter=setTimer;
-		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-		switch (status){
-		case 1:
-			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
-			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
-			display7SEG(1);
-			status = 2;
-			break;
-		case 2:
-			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
-			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, RESET);
-			display7SEG(2);
-			status = 1;
-			break;
-		default:
-			break;
-		}
-	}
+
 }
 /* USER CODE END 4 */
 
