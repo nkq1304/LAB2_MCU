@@ -36,7 +36,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define setTimer 100
+#define setTimer 50
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
