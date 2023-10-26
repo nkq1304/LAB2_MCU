@@ -38,7 +38,7 @@
 /* USER CODE BEGIN PM */
 #define setLed 50 //led red 500ms
 #define setDot 100 //1s
-#define setSegment 25 //250ms
+#define setSegment 50 //500ms
 int status =1;
 int counterLed = setLed;
 int counterDot = setDot;
@@ -46,6 +46,7 @@ int counterSeg = setSegment;
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1,3,0,4};
+int hour = 15, minute = 59, second = 50;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -157,7 +158,12 @@ void display7SEG (int counter){
 		HAL_GPIO_WritePin(SEG6_GPIO_Port, SEG6_Pin, RESET);
 	}
 }
-
+void updateClockBuffer(){
+	led_buffer[0] = hour/10;
+	led_buffer[1] = hour%10;
+	led_buffer[2] = minute/10;
+	led_buffer[3] = minute%10;
+}
 
 void update7SEG(int index){
 	display7SEG(led_buffer[index]);
@@ -233,7 +239,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+	    second++;
+	    if (second >= 60){
+	        second = 0;
+	        minute++;
+	    }
+	    if(minute >= 60){
+	        minute = 0;
+	        hour++;
+	    }
+	    if(hour >=24){
+	        hour = 0;
+	    }
+	    updateClockBuffer();
+	    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
