@@ -42,6 +42,10 @@
 int status =1;
 int counterLed = setLed;
 int counterDot = setDot;
+int counterSeg = setSegment;
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1,3,0,4};
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -154,30 +158,40 @@ void display7SEG (int counter){
 	}
 }
 
-void enable_EN(int en){
-	if(en == 0){
+
+void update7SEG(int index){
+	display7SEG(led_buffer[index]);
+    switch (index){
+	case 0:
+		// Display the first 7 SEG with led_buffer [0]
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-	}
-	if(en == 1){
+		break ;
+	case 1:
+		// Display the second 7 SEG with led_buffer [1]
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, RESET);
 		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-	}
-	if(en == 2){
+		break ;
+	case 2:
+		// Display the third 7 SEG with led_buffer [2]
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, RESET);
 		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-	}
-	if(en == 3){
+		break ;
+	case 3:
+		// Display the forth 7 SEG with led_buffer [3]
 		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, RESET);
+		break ;
+	default :
+		break ;
 	}
 }
 /* USER CODE END 0 */
@@ -352,35 +366,21 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ){
 	counterLed--;
 	counterDot--;
+	counterSeg--;
 	if(counterLed <= 0){
 		counterLed = setLed;
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-		switch(status){
-		case 1:
-			enable_EN(0);
-			display7SEG(1);
-			status = 2;
-			break;
-		case 2:
-			enable_EN(1);
-			display7SEG(2);
-			status = 3;
-			break;
-		case 3:
-			enable_EN(2);
-			display7SEG(3);
-			status = 4;
-			break;
-		case 4:
-			enable_EN(3);
-			display7SEG(0);
-			status = 1;
-			break;
-		}
 	}
 	if(counterDot <= 0){
 		counterDot=setDot;
 		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	}
+	if(counterSeg <= 0){
+		counterSeg=setSegment;
+		update7SEG(index_led++);
+		if(index_led > 3){
+			index_led=0;
+		}
 	}
 }
 /* USER CODE END 4 */
