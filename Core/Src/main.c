@@ -255,8 +255,22 @@ int main(void)
   while (1)
   {
 	    if(timer0_flag == 1){
-	        HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	        setTimer0(2000);
+	        setTimer0(1000);
+	        //TODO
+	        second++;
+	        if (second >= 60){
+	            second = 0;
+	            minute++;
+	        }
+	        if(minute >= 60){
+	            minute = 0;
+	            hour++;
+	        }
+	        if(hour >=24){
+	            hour = 0;
+	        }
+	        updateClockBuffer();
+	        HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	    }
     /* USER CODE END WHILE */
 
@@ -391,15 +405,10 @@ void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ){
 	timer_run();
 	//YOUR OTHER CODE
 	counterLed--;
-	counterDot--;
 	counterSeg--;
 	if(counterLed <= 0){
 		counterLed = setLed;
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	}
-	if(counterDot <= 0){
-		counterDot=setDot;
-		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	}
 	if(counterSeg <= 0){
 		counterSeg=setSegment;
