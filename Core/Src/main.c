@@ -38,7 +38,7 @@
 /* USER CODE BEGIN PM */
 #define setLed 50 //led red 500ms
 #define setDot 100 //1s
-#define setSegment 50 //500ms
+#define setSegment 25 //250ms
 int status =1;
 int counterLed = setLed;
 int counterDot = setDot;
@@ -377,10 +377,10 @@ void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef * htim ){
 	}
 	if(counterSeg <= 0){
 		counterSeg=setSegment;
-		update7SEG(index_led++);
 		if(index_led > 3){
 			index_led=0;
 		}
+		update7SEG(index_led++);
 	}
 }
 /* USER CODE END 4 */
